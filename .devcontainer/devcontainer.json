@@ -1,0 +1,23 @@
+{
+  "name": "Dotnet 9 Dev Container",
+  "image": "mcr.microsoft.com/dotnet/sdk:9.0",
+  "runArgs": ["--init"],
+  "postCreateCommand": "dotnet --info",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [],
+  "remoteUser": "root"
+}
