@@ -1,0 +1,40 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore church-rota.sln
+      
+    - name: Build solution
+      run: dotnet build church-rota.sln --configuration Release --no-restore
+      
+    - name: Run unit tests
+      run: dotnet test test/unit/church-rota.unit.tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=unit-test-results.trx"
+      
+    - name: Run acceptance tests
+      run: dotnet test test/acceptance/church-rota.acceptance.tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=acceptance-test-results.trx"
+      
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: |
+          **/TestResults/*.trx

@@ -1,0 +1,106 @@
+name: Deploy Azure Infrastructure
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'devops/**'
+      - '.github/workflows/deploy-infrastructure.yml'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Terraform action to perform'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+env:
+  TERRAFORM_VERSION: '1.6.0'
+  WORKING_DIR: './devops'
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+    
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ env.TERRAFORM_VERSION }}
+        
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Terraform Format Check
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+      
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+      
+    - name: Terraform Plan
+      id: plan
+      if: github.event_name == 'push' || github.event.inputs.action == 'plan'
+      run: terraform plan -no-color -input=false -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
+      continue-on-error: true
+      
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      run: exit 1
+      
+    - name: Terraform Apply
+      if: github.event.inputs.action == 'apply' && github.event_name == 'workflow_dispatch'
+      run: terraform apply -auto-approve -input=false -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
+      
+    - name: Terraform Destroy
+      if: github.event.inputs.action == 'destroy' && github.event_name == 'workflow_dispatch'
+      run: terraform destroy -auto-approve -input=false -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
+      
+    - name: Comment PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          
+          <details><summary>Show Plan</summary>
+          
+          \`\`\`terraform
+          ${{ steps.plan.outputs.stdout }}
+          \`\`\`
+          
+          </details>
+          
+          *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })

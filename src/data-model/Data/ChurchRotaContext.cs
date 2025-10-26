@@ -13,6 +13,7 @@ public class ChurchRotaContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<PeopleRole> PeopleRoles { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<Solemnity> Solemnities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,6 +61,14 @@ public class ChurchRotaContext : DbContext
                 .WithMany(r => r.PeopleRoles)
                 .HasForeignKey(e => e.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Solemnity>(entity =>
+        {
+            entity.HasKey(e => e.SolemnityId);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Date).IsRequired();
+            entity.Property(e => e.Season).IsRequired().HasMaxLength(50);
         });
     }
 }

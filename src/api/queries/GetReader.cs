@@ -1,3 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using ChurchRota.Library.Data;
+using ChurchRota.Api.Model;
+using ChurchRota.Api.Utilities;
+
 namespace ChurchRota.Api.Queries;
 
 public class GetReader
