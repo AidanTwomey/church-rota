@@ -44,16 +44,20 @@ public class WebApiFactory : WebApplicationFactory<Program>
             var db = scopedServices.GetRequiredService<ChurchRotaContext>();
             db.Database.EnsureCreated();
 
+            var testPeople = new[]{
+                (christianName: "Mister", surname: "Magoo"),
+                (christianName: "Missus", surname: "Magoo")
+            };
+
             // Seed test data: a Person called "Mister Magoo" and a Role called "Reader"
             if (!db.People.Any(p => p.FirstName == "Mister" && p.LastName == "Magoo"))
             {
-                db.People.Add(new Person
-                {
-                    FirstName = "Mister",
-                    LastName = "Magoo",
-                    CreatedDate = DateTime.UtcNow,
-                    ModifiedDate = DateTime.UtcNow
-                });
+                foreach( var person in testPeople )
+                    db.People.Add(new Person
+                    {
+                        FirstName = person.christianName,
+                        LastName = person.surname
+                    });
             }
 
             if (!db.Roles.Any(r => r.RoleName == "Reader"))
@@ -61,13 +65,28 @@ public class WebApiFactory : WebApplicationFactory<Program>
                 db.Roles.Add(new Role
                 {
                     RoleName = "Reader",
-                    Description = "Test role",
-                    CreatedDate = DateTime.UtcNow,
-                    ModifiedDate = DateTime.UtcNow
+                    Description = "Test role"
                 });
             }
 
             db.SaveChanges();
+
+            // Ensure a linking PeopleRole exists between Mister Magoo and the Reader role
+            var personEntity = db.People.SingleOrDefault(p => p.FirstName == "Mister" && p.LastName == "Magoo");
+            var readerRole = db.Roles.SingleOrDefault(r => r.RoleName == "Reader");
+            if (personEntity != null && readerRole != null)
+            {
+                if (!db.PeopleRoles.Any(pr => pr.PersonId == personEntity.PersonId && pr.RoleId == readerRole.RoleId))
+                {
+                    db.PeopleRoles.Add(new PeopleRole
+                    {
+                        PersonId = personEntity.PersonId,
+                        RoleId = readerRole.RoleId
+                    });
+
+                    db.SaveChanges();
+                }
+            }
         });
 
         // Use a non-development environment to avoid the Developer Exception Page during tests

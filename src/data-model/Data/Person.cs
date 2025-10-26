@@ -11,4 +11,5 @@ public class Person
     public DateTime ModifiedDate { get; set; }
 
     public ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+    public ICollection<PeopleRole> PeopleRoles { get; set; } = new List<PeopleRole>();
 }

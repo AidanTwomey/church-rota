@@ -11,6 +11,7 @@ public class ChurchRotaContext : DbContext
 
     public DbSet<Person> People { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<PeopleRole> PeopleRoles { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +44,22 @@ public class ChurchRotaContext : DbContext
             entity.HasOne(d => d.Role)
                 .WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.RoleId);
+        });
+
+        modelBuilder.Entity<PeopleRole>(entity =>
+        {
+            // Composite primary key
+            entity.HasKey(e => new { e.PersonId, e.RoleId });
+
+            entity.HasOne(e => e.Person)
+                .WithMany(p => p.PeopleRoles)
+                .HasForeignKey(e => e.PersonId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Role)
+                .WithMany(r => r.PeopleRoles)
+                .HasForeignKey(e => e.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

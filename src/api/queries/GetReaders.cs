@@ -11,12 +11,17 @@ public static class GetReaders
 {
     public static async Task<IResult> Handle(ChurchRotaContext db)
     {
-        var readers = await db.People.Where(r => r.RoleName == "Reader").ToListAsync();
+        // Find people who have an associated PeopleRole pointing to the Role "Reader"
+        var readers = await db.People
+            .Include(p => p.PeopleRoles!)
+                .ThenInclude(pr => pr.Role)
+            .Where(p => p.PeopleRoles!.Any(pr => pr.Role != null && pr.Role.RoleName == "Reader"))
+            .ToListAsync();
 
         var response = new List<Reader>();
         foreach (var r in readers)
         {
-            response.Add(new Reader { Name = r.RoleName });
+            response.Add(new Reader { Name = $"{r.FirstName} {r.LastName}" });
         }
         return Results.Ok(response);
     }
