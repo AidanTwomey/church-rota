@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.Build.Sql/2.0.0">
+  <PropertyGroup>
+    <Name>church-rota.data</Name>
+    <RootNamespace>church-rota.data</RootNamespace>
+    <DatabaseName>ChurchRota</DatabaseName>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <TargetPlatform>Microsoft SQL Server 2019</TargetPlatform>
+    <EnableDefaultSqlItems>false</EnableDefaultSqlItems>
+    <ProjectGuid>{00000000-0000-0000-0000-000000000000}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
+    <Build Include="Model\People.sql" />
+    <Build Include="Model\Roles.sql" />
+    <Build Include="Model\Schedules.sql" />
+  </ItemGroup>
+</Project>

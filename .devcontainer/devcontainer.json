@@ -1,13 +1,15 @@
 {
   "name": "Dotnet 9 Dev Container",
   "image": "mcr.microsoft.com/dotnet/sdk:9.0",
-  "runArgs": ["--init"],
-  "postCreateCommand": "dotnet --info",
+  "runArgs": ["--init", "--add-host=host.docker.internal:host-gateway"],
+  "postCreateCommand": ".devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-dotnettools.csharp",
-        "ms-dotnettools.csdevkit"
+        "ms-dotnettools.csdevkit",
+        // SQL Server (mssql) - adds Data Explorer and sql tooling
+        "ms-mssql.mssql"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
