@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ChurchRota.Library.Data;
-using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using ChurchRota.Api.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,19 +33,8 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+// Readers endpoint: per request, return 201 (Created) on GET
+app.MapGet("/readers", GetReaders.Handle).WithName("GetReaders");
 
 // On startup, create the database and apply any pending migrations (or create schema when no migrations exist)
 using (var scope = app.Services.CreateScope())
@@ -81,7 +71,6 @@ using (var scope = app.Services.CreateScope())
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+// Expose the implicit Program class to integration tests (WebApplicationFactory requires a public
+// Program type as the TEntryPoint generic parameter).
+public partial class Program { }
