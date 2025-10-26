@@ -17,6 +17,8 @@ builder.Services.AddDbContext<ChurchRotaContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddOpenApi();
+// Register PhoneNumberSanitiser as a singleton so it can be injected into handlers
+builder.Services.AddSingleton<PhoneNumberSanitiser>();
 
 var app = builder.Build();
 
@@ -28,13 +30,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-// Readers endpoint: per request, return 201 (Created) on GET
 app.MapGet("/readers", GetReaders.Handle).WithName("GetReaders");
+
+app.MapGet("/readers/{id}", (ChurchRotaContext db, string id, PhoneNumberSanitiser sanitiser)
+    => new GetReader(sanitiser).Handle(db, id)).WithName("GetReader");
 
 // On startup, create the database and apply any pending migrations (or create schema when no migrations exist)
 using (var scope = app.Services.CreateScope())

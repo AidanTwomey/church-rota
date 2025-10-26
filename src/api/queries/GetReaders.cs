@@ -16,14 +16,10 @@ public static class GetReaders
             .Include(p => p.PeopleRoles!)
                 .ThenInclude(pr => pr.Role)
             .Where(p => p.PeopleRoles!.Any(pr => pr.Role != null && pr.Role.RoleName == "Reader"))
+            .Select(r => new Reader { Name = $"{r.FirstName} {r.LastName}" })
             .ToListAsync();
 
-        var response = new List<Reader>();
-        foreach (var r in readers)
-        {
-            response.Add(new Reader { Name = $"{r.FirstName} {r.LastName}" });
-        }
-        return Results.Ok(response);
+        return Results.Ok(readers);
     }
 }
 

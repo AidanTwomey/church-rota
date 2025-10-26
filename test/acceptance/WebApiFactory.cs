@@ -45,8 +45,8 @@ public class WebApiFactory : WebApplicationFactory<Program>
             db.Database.EnsureCreated();
 
             var testPeople = new[]{
-                (christianName: "Mister", surname: "Magoo"),
-                (christianName: "Missus", surname: "Magoo")
+                (christianName: "Mister", surname: "Magoo", phone: "07700900123"),
+                (christianName: "Missus", surname: "Magoo", phone: "07700900124")
             };
 
             // Seed test data: a Person called "Mister Magoo" and a Role called "Reader"
@@ -56,7 +56,8 @@ public class WebApiFactory : WebApplicationFactory<Program>
                     db.People.Add(new Person
                     {
                         FirstName = person.christianName,
-                        LastName = person.surname
+                        LastName = person.surname,
+                        Phone = person.phone
                     });
             }
 
