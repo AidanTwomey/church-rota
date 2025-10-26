@@ -23,27 +23,27 @@ public static class GetReaders
     }
 }
 
-internal class CreatedTextResult : IResult
-{
-    private readonly string _content;
-    private readonly string _contentType;
-    private readonly string _location;
+// internal class CreatedTextResult : IResult
+// {
+//     private readonly string _content;
+//     private readonly string _contentType;
+//     private readonly string _location;
 
-    public CreatedTextResult(string content, string contentType, string location)
-    {
-        _content = content;
-        _contentType = contentType;
-        _location = location;
-    }
+//     public CreatedTextResult(string content, string contentType, string location)
+//     {
+//         _content = content;
+//         _contentType = contentType;
+//         _location = location;
+//     }
 
-    public async Task ExecuteAsync(HttpContext httpContext)
-    {
-        httpContext.Response.StatusCode = StatusCodes.Status201Created;
-        if (!string.IsNullOrEmpty(_location))
-        {
-            httpContext.Response.Headers["Location"] = _location;
-        }
-        httpContext.Response.ContentType = _contentType;
-        await httpContext.Response.WriteAsync(_content);
-    }
-}
+//     public async Task ExecuteAsync(HttpContext httpContext)
+//     {
+//         httpContext.Response.StatusCode = StatusCodes.Status201Created;
+//         if (!string.IsNullOrEmpty(_location))
+//         {
+//             httpContext.Response.Headers["Location"] = _location;
+//         }
+//         httpContext.Response.ContentType = _contentType;
+//         await httpContext.Response.WriteAsync(_content);
+//     }
+// }

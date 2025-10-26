@@ -56,21 +56,26 @@ public class ReadersTests : IClassFixture<WebApiFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
 
-    // [Fact]
-    // public async Task Get_Readers_Returns201AndContainsReader()
-    // {
-    //     // Arrange
-    //     using var client = _factory.CreateClient();
+    [Fact]
+    public async Task Put_Reader_Returns201AndContainsReader()
+    {
+        // Arrange
+        using var client = _factory.CreateClient();
 
-    //     // Act
-    //     var response = await client.PutAsync("/readers/07700 900123");
+        // Act
+        // var response = await client.PutAsync("/readers/07700 900123");
 
-    //     response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        // response.StatusCode.ShouldBe(HttpStatusCode.Created);
 
-    //     var json = await response.Content.ReadAsStringAsync();
-    //     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-    //     var readers = JsonSerializer.Deserialize<Reader[]>(json, options);
+        // var json = await response.Content.ReadAsStringAsync();
+        // var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        // var readers = JsonSerializer.Deserialize<Reader[]>(json, options);
+
+        // readers.Single().Name.ShouldBe("Mister Magoo");
         
-    //     readers.Single().Name.ShouldBe("Mister Magoo");
-    // }
+
+        // var response = await client.PutAsync("/readers/07700 900123");
+
+        // response.StatusCode.ShouldBe(HttpStatusCode.OK);
+    }
 }

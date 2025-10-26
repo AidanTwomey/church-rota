@@ -1,4 +1,5 @@
-﻿using ChurchRota.Api.Queries;
+﻿using ChurchRota.Api.Utilities;
+using Shouldly;
 
 namespace church_rota.unit.tests;
 
@@ -14,7 +15,6 @@ public class PhoneSanitiserTests
         var sanitiser = new PhoneNumberSanitiser();
 
         // Act
-        var result = sanitiser.Sanitize(input);
-
+        sanitiser.Sanitize(input).ShouldBe(expected);
     }
 }

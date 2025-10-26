@@ -9,7 +9,9 @@
         "ms-dotnettools.csharp",
         "ms-dotnettools.csdevkit",
         // SQL Server (mssql) - adds Data Explorer and sql tooling
-        "ms-mssql.mssql"
+        "ms-mssql.mssql",
+        // Swagger Viewer - view OpenAPI/Swagger specs
+        "Arjun.swagger-viewer"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"

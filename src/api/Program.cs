@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ChurchRota.Library.Data;
-using System.Text.Json;
 using ChurchRota.Api.Queries;
+using ChurchRota.Api.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +33,7 @@ app.UseHttpsRedirection();
 app.MapGet("/readers", GetReaders.Handle).WithName("GetReaders");
 
 app.MapGet("/readers/{id}", (ChurchRotaContext db, string id, PhoneNumberSanitiser sanitiser)
-    => new GetReader(sanitiser).Handle(db, id)).WithName("GetReader");
+    => new GetReader(db, sanitiser).Handle(id)).WithName("GetReader");
 
 // On startup, create the database and apply any pending migrations (or create schema when no migrations exist)
 using (var scope = app.Services.CreateScope())

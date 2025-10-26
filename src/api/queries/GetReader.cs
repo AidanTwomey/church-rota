@@ -1,29 +1,17 @@
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
-using ChurchRota.Library.Data;
-using ChurchRota.Api.Model;
-
 namespace ChurchRota.Api.Queries;
-
-public class PhoneNumberSanitiser
-{
-    public string Sanitize(string phoneNumber)
-    {
-        // Remove any non-numeric characters
-        return new string(phoneNumber.Where(char.IsDigit).ToArray());
-    }
-}
 
 public class GetReader
 {
     private readonly PhoneNumberSanitiser sanitiser;
+    private readonly ChurchRotaContext db;
 
-    public GetReader(PhoneNumberSanitiser sanitiser)
+    public GetReader(ChurchRotaContext db, PhoneNumberSanitiser sanitiser)
     {
+        this.db = db;
         this.sanitiser = sanitiser;
     }
 
-    public async Task<IResult> Handle(ChurchRotaContext db, string id)
+    public async Task<IResult> Handle(string id)
     {
         // Sanitize incoming id and find the person by phone first
         var sanitized = sanitiser.Sanitize(id);
