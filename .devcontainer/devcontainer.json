@@ -11,7 +11,9 @@
         // SQL Server (mssql) - adds Data Explorer and sql tooling
         "ms-mssql.mssql",
         // Swagger Viewer - view OpenAPI/Swagger specs
-        "Arjun.swagger-viewer"
+        "Arjun.swagger-viewer",
+        // GitHub Actions - syntax highlighting and validation for workflows
+        "github.vscode-github-actions"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"

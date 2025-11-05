@@ -62,7 +62,7 @@ jobs:
     - name: Terraform Plan
       id: plan
       if: github.event_name == 'push' || github.event.inputs.action == 'plan'
-      run: terraform plan -no-color -input=false -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
+      run: terraform plan -no-color -input=false
       continue-on-error: true
       
     - name: Terraform Plan Status
@@ -71,11 +71,11 @@ jobs:
       
     - name: Terraform Apply
       if: github.event.inputs.action == 'apply' && github.event_name == 'workflow_dispatch'
-      run: terraform apply -auto-approve -input=false -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
+      run: terraform apply -auto-approve -input=false
       
     - name: Terraform Destroy
       if: github.event.inputs.action == 'destroy' && github.event_name == 'workflow_dispatch'
-      run: terraform destroy -auto-approve -input=false -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}"
+      run: terraform destroy -auto-approve -input=false
       
     - name: Comment PR
       if: github.event_name == 'pull_request'
