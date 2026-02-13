@@ -28,8 +28,8 @@ jobs:
     - name: Run unit tests
       run: dotnet test test/unit/church-rota.unit.tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=unit-test-results.trx"
       
-    - name: Run acceptance tests
-      run: dotnet test test/acceptance/church-rota.acceptance.tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=acceptance-test-results.trx"
+    - name: Run swap-function acceptance tests
+      run: dotnet test test/swap-function-acceptance/church-rota.swap-function-acceptance.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=acceptance-test-results.trx"
       
     - name: Upload test results
       if: always()

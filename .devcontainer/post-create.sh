@@ -11,6 +11,33 @@ else
   echo "dotnet not found in container"
 fi
 
+# Install Azure Functions Core Tools if not already installed
+if command -v func >/dev/null 2>&1; then
+  echo "Azure Functions Core Tools already installed"
+  func --version
+else
+  echo "Installing Azure Functions Core Tools..."
+  
+  # Install Node.js and npm if not present (required for func tools)
+  if ! command -v npm >/dev/null 2>&1; then
+    echo "Installing Node.js and npm..."
+    apt-get update -y
+    apt-get install -y curl
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    apt-get install -y nodejs
+  fi
+  
+  # Install Azure Functions Core Tools via npm
+  npm install -g azure-functions-core-tools@4 --unsafe-perm true
+  
+  if command -v func >/dev/null 2>&1; then
+    echo "Azure Functions Core Tools installed successfully:"
+    func --version
+  else
+    echo "Warning: func not found after installation"
+  fi
+fi
+
 # Install msodbcsql and mssql-tools (sqlcmd) if not already installed
 if command -v sqlcmd >/dev/null 2>&1; then
   echo "sqlcmd already installed"
