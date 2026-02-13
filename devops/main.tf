@@ -11,7 +11,7 @@ terraform {
   # Add backend configuration for state file
   backend "azurerm" {
     resource_group_name  = "rg-terraform-state"
-    storage_account_name = "sttfstate<unique>"  # Must be globally unique
+    storage_account_name = "sttfstatechurchrota"
     container_name       = "tfstate"
     key                  = "church-rota.tfstate"
   }
