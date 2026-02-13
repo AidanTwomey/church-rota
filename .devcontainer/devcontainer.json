@@ -2,7 +2,7 @@
   "name": "Dotnet 9 Dev Container",
   "image": "mcr.microsoft.com/dotnet/sdk:9.0",
   "runArgs": ["--init", "--add-host=host.docker.internal:host-gateway"],
-  "postCreateCommand": ".devcontainer/post-create.sh",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -13,7 +13,9 @@
         // Swagger Viewer - view OpenAPI/Swagger specs
         "Arjun.swagger-viewer",
         // GitHub Actions - syntax highlighting and validation for workflows
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        // Azure Functions - tooling for Azure Functions development
+        "ms-azuretools.vscode-azurefunctions"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
