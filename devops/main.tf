@@ -7,6 +7,14 @@ terraform {
       version = "~> 3.0"
     }
   }
+  
+  # Add backend configuration for state file
+  backend "azurerm" {
+    resource_group_name  = "rg-terraform-state"
+    storage_account_name = "sttfstate<unique>"  # Must be globally unique
+    container_name       = "tfstate"
+    key                  = "church-rota.tfstate"
+  }
 }
 
 provider "azurerm" {
